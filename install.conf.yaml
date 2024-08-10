@@ -6,9 +6,9 @@
 - clean: ["~"]
 
 - link:
-    ~/.gitconfig:
-    ~/.gitignore:
-    ~/.zshrc:
+    ~/.gitconfig: .gitconfig
+    ~/.gitignore: .gitignore
+    ~/.zshrc: .zshrc
 
 - create:
     - ~/bin
@@ -19,7 +19,7 @@
         bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)",
         Installing zinit,
       ]
-    - [curl -sS https://starship.rs/install.sh | sh - -y, Installing starship]
+    - [curl -sS https://starship.rs/install.sh | sh -- -y, Installing starship]
     - [
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)",
         Installing Homebrew,
