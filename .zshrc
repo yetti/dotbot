@@ -10,16 +10,21 @@ fi
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
 ### End of Zinit's installer chunk
 
 # Set up the prompt
 autoload -Uz promptinit
 promptinit
 prompt fade
-
-# STARSHIP PROMPT
-
-eval "$(starship init zsh)"
 
 # HISTORY
 
@@ -31,15 +36,15 @@ SAVEHIST=1000
 HISTFILE=~/.zsh_history
 
 # Use modern completion system
-autoload -Uz bashcompinit
-bashcompinit
+autoload -Uz +X compinit && compinit
+autoload -Uz +X bashcompinit && bashcompinit
+compinit -u
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -55,13 +60,25 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
+# USER SETTINGS
+
+eval "$(dircolors -b)"
+
+# STARSHIP PROMPT
+
+eval "$(starship init zsh)"
+
+# ASDF
+
+. "$HOME/.asdf/asdf.sh"
+
 zinit ice wait blockf atpull'zinit creinstall -q .'
 zinit light zsh-users/zsh-completions
 
 zinit ice wait atload"_zsh_autosuggest_start"
 zinit light zsh-users/zsh-autosuggestions
 
-zinit ice wait atinit"zpcompinit; zpcdreplay"
+zinit ice wait atinit"zpcdreplay"
 zinit light zdharma-continuum/fast-syntax-highlighting
 
 zinit load zdharma-continuum/history-search-multi-word
@@ -71,21 +88,21 @@ zinit light tj/git-extras
 source "$HOME/.local/share/zinit/plugins/tj---git-extras/etc/git-extras-completion.zsh"
 
 zinit ice wait"0" lucid
-# zinit snippet OMZ::plugins/rails/rails.plugin.zsh
+zinit light htlsne/zinit-rbenv
+zinit snippet OMZ::plugins/asdf/asdf.plugin.zsh
+zinit snippet OMZ::plugins/rails/rails.plugin.zsh
 zinit snippet OMZ::plugins/bundler/bundler.plugin.zsh
-
+zinit snippet OMZ::plugins/direnv/direnv.plugin.zsh
 zinit light aperezdc/zsh-fzy
-
-# USER SETTINGS
 
 # ALIASES
 
 alias maildev="npx maildev -s 2525 -w 9090"
 alias be="bundle exec"
-
-# direnv
-
-eval "$(direnv hook zsh)"
+alias pod="podman"
+alias om="overmind"
+alias oms="overmind s -f ${1}"
+alias omd="overmind s -D -f ${1}"
 
 # yarn global path
 
